@@ -31,7 +31,7 @@ def get_model_path(path: str) -> str:
             return os.path.join(path, files[0])
     return path
 
-def create_config(task_id, model, model_type, expected_repo_name, hours_to_complete):
+def create_config(task_id, model, model_type, expected_repo_name):
     """Create the diffusion config file"""
     # In Docker environment, adjust paths
     if os.path.exists("/workspace/core/config"):
