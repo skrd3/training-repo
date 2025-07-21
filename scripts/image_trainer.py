@@ -46,7 +46,7 @@ def create_config(task_id, model, model_type, expected_repo_name, hours_to_compl
     if model_type == ImageModelType.SDXL.value:
         with open(sdxl_path, "r") as file:
             config = toml.load(file)
-            config["max_train_steps"] = int(hours_to_complete * 1500)
+            config["max_train_steps"] = int(1800)
     elif model_type == ImageModelType.FLUX.value:
         with open(flux_path, "r") as file:
             config = toml.load(file)
@@ -118,7 +118,6 @@ async def main():
     parser.add_argument("--model", required=True, help="Model name or path")
     parser.add_argument("--dataset-zip", required=True, help="Link to dataset zip file")
     parser.add_argument("--model-type", required=True, choices=["sdxl", "flux"], help="Model type")
-    parser.add_argument("--hours-to-complete", type=float, required=True, help="Number of hours to complete the task")
     parser.add_argument("--expected-repo-name", help="Expected repository name")
     args = parser.parse_args()
 
@@ -136,7 +135,6 @@ async def main():
         model_path,
         args.model_type,
         args.expected_repo_name,
-        args.hours_to_complete,
     )
 
     # Prepare dataset
