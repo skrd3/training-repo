@@ -31,7 +31,7 @@ def get_model_path(path: str) -> str:
             return os.path.join(path, files[0])
     return path
 
-def create_config(task_id, model, model_type, expected_repo_name):
+def create_config(task_id, model, model_type, expected_repo_name, hours_to_complete):
     """Create the diffusion config file"""
     # In Docker environment, adjust paths
     if os.path.exists("/workspace/core/config"):
@@ -46,9 +46,11 @@ def create_config(task_id, model, model_type, expected_repo_name):
     if model_type == ImageModelType.SDXL.value:
         with open(sdxl_path, "r") as file:
             config = toml.load(file)
+            config["max_train_steps"] = int(hours_to_complete * 1500)
     elif model_type == ImageModelType.FLUX.value:
         with open(flux_path, "r") as file:
             config = toml.load(file)
+            config["max_train_steps"] = int(hours_to_complete * 600)
     else:
         raise ValueError(f"Unknown model type: {model_type}")
 
@@ -59,7 +61,7 @@ def create_config(task_id, model, model_type, expected_repo_name):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
     config["output_dir"] = output_dir
-
+    
     # Save config to file
     config_path = os.path.join("/dataset/configs", f"{task_id}.toml")
     save_config_toml(config, config_path)
@@ -134,6 +136,7 @@ async def main():
         model_path,
         args.model_type,
         args.expected_repo_name,
+        args.hours_to_complete,
     )
 
     # Prepare dataset
