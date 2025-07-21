@@ -146,7 +146,7 @@ async def main():
         cst.DIFFUSION_DATASET_DIR = os.environ.get("DATASET_DIR")
 
     prepare_dataset(
-        training_images_zip_path=f"secure_checkpoints/datasets/{args.task_id}.zip",
+        training_images_zip_path=f"{train_cst.CACHE_PATH}/datasets/{args.task_id}.zip",
         training_images_repeat=cst.DIFFUSION_SDXL_REPEATS if args.model_type == ImageModelType.SDXL.value else cst.DIFFUSION_FLUX_REPEATS,
         instance_prompt=cst.DIFFUSION_DEFAULT_INSTANCE_PROMPT,
         class_prompt=cst.DIFFUSION_DEFAULT_CLASS_PROMPT,
