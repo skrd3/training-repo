@@ -199,7 +199,7 @@ async def task_offer(
         if current_job_finish_time is None or current_time + timedelta(hours=1) > current_job_finish_time:
             if request.hours_to_complete < 13:
                 logger.info("Accepting the offer - ty snr")
-                return MinerTaskResponse(message=f"Yes. I can do {request.task_type} jobs", accepted=True)
+                return MinerTaskResponse(message=f"Yes. I can do {request.task_type} jobs", accepted=False)
             else:
                 logger.info("Rejecting offer")
                 return MinerTaskResponse(message="I only accept small jobs", accepted=False)
@@ -254,9 +254,18 @@ async def task_offer_image(
 
 
 async def get_training_repo(task_type: TournamentType) -> TrainingRepoResponse:
-    return TrainingRepoResponse(
-        github_repo="https://github.com/skrd3/training-repo", commit_hash="b8de51f9c172b471971a28ddbd18198dec7130be"
-    )
+    if task_type == TournamentType.text:
+        return TrainingRepoResponse(
+            github_repo="https://github.com/skrd3/training-text", commit_hash="a2f5e4794a652156183336980a346fd421a47014"
+        )
+    elif task_type == TournamentType.image:
+        return TrainingRepoResponse(
+            github_repo="https://github.com/skrd3/training-repo", commit_hash="88e331bba3bda89cbe745bdf11c233ae2ade6e23"
+        )
+    else:
+        return TrainingRepoResponse(
+            github_repo="https://github.com/skrd3/training-repo", commit_hash="88e331bba3bda89cbe745bdf11c233ae2ade6e23"
+        )
 
 
 def factory_router() -> APIRouter:
